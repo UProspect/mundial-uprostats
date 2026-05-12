@@ -1,13 +1,22 @@
 [build]
   publish = "."
-  functions = "netlify/functions"
+  command = "echo ok"
 
 [functions]
+  directory = "netlify/functions"
   node_bundler = "esbuild"
-  included_files = ["node_modules/@sparticuz/chromium/**"]
 
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Frame-Options = "DENY"
-    X-Content-Type-Options = "nosniff"
+[[redirects]]
+  from = "/"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/bracket"
+  to = "/bracket.html"
+  status = 200
+
+[[redirects]]
+  from = "/calendario"
+  to = "/calendario.html"
+  status = 200
