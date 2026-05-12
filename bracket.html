@@ -369,7 +369,7 @@ nav{background:var(--navy);height:60px;display:flex;align-items:center;
 
 <div id="tab-best3" style="display:none"><div class="pw">
   <div class="ph-title">Mejores Terceros Lugares</div>
-  <div class="ph-sub" id="b3Sub">Selecciona los 8 equipos que avanzan como mejores terceros al bracket.</div>
+  <div class="ph-sub" id="b3Sub">Selecciona los 8 equipos que avanzan como mejores terceros.</div>
   <div class="b3-section">
     <div class="b3-count" id="b3CountLabel">0 / 8 seleccionados</div>
     <div id="b3AutoMsg" style="display:none;background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:10px 14px;font-size:12px;color:#166534;margin-bottom:14px">Los 8 mejores terceros fueron seleccionados automáticamente según sus puntos. Puedes modificar la selección.</div>
@@ -1011,8 +1011,8 @@ function submitDownload(){
   const tel=document.getElementById('f-tel').value.trim();
   const fin=BK.fin[0]||{};const champ=fin.w||'';const runup=fin.w?(fin.t1===fin.w?fin.t2:fin.t1):'';
   function winners(arr){return(arr||[]).filter(m=>m.w).map(m=>m.t1+' vs '+m.t2+' → '+m.w).join(' | ');}
-  const data={nombre,email,género,tel,fecha:new Date().toISOString(),modo:simMode,
-    campeón:champ,subcampeón:runup,tercer:thirdWinner||'',
+  const data={nombre,email,genero:género,tel,fecha:new Date().toISOString(),modo:simMode,
+    campeon:champ,subcampeon:runup,tercer:thirdWinner||'',
     grupos:Object.entries(GRP).map(([g,adv])=>'Grupo '+g+': '+adv.join(', ')).join(' | '),
     r32:winners(BK.r32),r16:winners(BK.r16),cuartos:winners(BK.qf),semis:winners(BK.sf)};
   const leads=JSON.parse(localStorage.getItem('wc26leads')||'[]');
