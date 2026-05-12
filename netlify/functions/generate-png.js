@@ -39,7 +39,7 @@ async function uploadToDrive(imageBuffer, fileName) {
   
   // Multipart upload
   const boundary = 'boundary_uprostats_' + Date.now();
-  const metadata = JSON.stringify({name: fileName, parents: [folderId], mimeType: 'image/png'});
+  const metadata = JSON.stringify({name: fileName, parents: [folderId], mimeType: 'image/png', driveId: folderId});
   
   const CRLF = '\r\n';
   const body = Buffer.concat([
@@ -49,7 +49,7 @@ async function uploadToDrive(imageBuffer, fileName) {
     Buffer.from(`${CRLF}--${boundary}--`)
   ]);
   
-  const res = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,webViewLink&supportsAllDrives=true', {
+  const res = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,webViewLink&supportsAllDrives=true&includeItemsFromAllDrives=true', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${token}`,
