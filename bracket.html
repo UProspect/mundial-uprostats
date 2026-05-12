@@ -988,11 +988,11 @@ function validateForm(){
   const n=document.getElementById('f-nombre').value.trim();
   const a=document.getElementById('f-apellido').value.trim();
   const e=document.getElementById('f-email').value.trim();
-  const g=document.getElementById('f-género').value;
+  const g=document.getElementById('f-genero').value;
   document.getElementById('e-nombre').classList.toggle('show',!n);
   document.getElementById('e-apellido').classList.toggle('show',!a);
   document.getElementById('e-email').classList.toggle('show',!e||!/^[^@]+@[^@]+\.[^@]+$/.test(e));
-  document.getElementById('e-género').classList.toggle('show',!g);
+  document.getElementById('e-genero').classList.toggle('show',!g);
   return n&&a&&e&&/^[^@]+@[^@]+\.[^@]+$/.test(e)&&g;
 }
 
@@ -1007,7 +1007,7 @@ function submitDownload(){
   if(!validateForm())return;
   const nombre=document.getElementById('f-nombre').value.trim()+' '+document.getElementById('f-apellido').value.trim();
   const email=document.getElementById('f-email').value.trim();
-  const género=document.getElementById('f-género').value;
+  const género=document.getElementById('f-genero').value;
   const tel=document.getElementById('f-tel').value.trim();
   const fin=BK.fin[0]||{};const champ=fin.w||'';const runup=fin.w?(fin.t1===fin.w?fin.t2:fin.t1):'';
   function winners(arr){return(arr||[]).filter(m=>m.w).map(m=>m.t1+' vs '+m.t2+' → '+m.w).join(' | ');}
