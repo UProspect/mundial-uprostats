@@ -1,13 +1,7 @@
 [build]
   publish = "."
-  functions = "netlify/functions"
+  command = "echo 'Build complete'"
 
 [functions]
+  directory = "netlify/functions"
   node_bundler = "esbuild"
-  included_files = ["node_modules/@sparticuz/chromium/**"]
-
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Frame-Options = "DENY"
-    X-Content-Type-Options = "nosniff"
