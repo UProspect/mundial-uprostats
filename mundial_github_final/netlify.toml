@@ -1,7 +1,22 @@
 [build]
   publish = "."
-  command = "echo 'Build complete'"
+  command = "echo ok"
 
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/bracket"
+  to = "/bracket.html"
+  status = 200
+
+[[redirects]]
+  from = "/calendario"
+  to = "/calendario.html"
+  status = 200
