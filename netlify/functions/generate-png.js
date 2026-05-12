@@ -1,26 +1,68 @@
-const { google } = require('googleapis');
-const { Readable } = require('stream');
+// No external packages needed - uses fetch for Drive API directly
 
 const DRIVE_FOLDER_ID = process.env.DRIVE_FOLDER_ID;
 const HCTI_API_USER = process.env.HCTI_API_USER;
 const HCTI_API_KEY = process.env.HCTI_API_KEY;
 
+async function getAccessToken(creds) {
+  // Create JWT for service account
+  const header = Buffer.from(JSON.stringify({alg:'RS256',typ:'JWT'})).toString('base64url');
+  const now = Math.floor(Date.now()/1000);
+  const claim = Buffer.from(JSON.stringify({
+    iss: creds.client_email,
+    scope: 'https://www.googleapis.com/auth/drive.file',
+    aud: 'https://oauth2.googleapis.com/token',
+    iat: now, exp: now+3600
+  })).toString('base64url');
+  
+  // Sign with private key using crypto
+  const crypto = require('crypto');
+  const sign = crypto.createSign('RSA-SHA256');
+  sign.update(`${header}.${claim}`);
+  const sig = sign.sign(creds.private_key, 'base64url');
+  const jwt = `${header}.${claim}.${sig}`;
+  
+  const res = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: {'Content-Type':'application/x-www-form-urlencoded'},
+    body: `grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=${jwt}`
+  });
+  const data = await res.json();
+  if (!data.access_token) throw new Error('Token error: ' + JSON.stringify(data));
+  return data.access_token;
+}
+
 async function uploadToDrive(imageBuffer, fileName) {
   const creds = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT);
-  const auth = new google.auth.GoogleAuth({
-    credentials: creds,
-    scopes: ['https://www.googleapis.com/auth/drive.file'],
+  const token = await getAccessToken(creds);
+  const folderId = process.env.DRIVE_FOLDER_ID;
+  
+  // Multipart upload
+  const boundary = 'boundary_uprostats_' + Date.now();
+  const metadata = JSON.stringify({name: fileName, parents: [folderId], mimeType: 'image/png'});
+  
+  const body = Buffer.concat([
+    Buffer.from(`--${boundary}\r\nContent-Type: application/json\r\n\r\n${metadata}\r\n`),
+    Buffer.from(`--${boundary}\r\nContent-Type: image/png\r\n\r\n`),
+    imageBuffer,
+    Buffer.from(`\r\n--${boundary}--`)
+  ]);
+  
+  const res = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,webViewLink', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': `multipart/related; boundary=${boundary}`,
+      'Content-Length': body.length,
+    },
+    body,
   });
-  const drive = google.drive({ version: 'v3', auth });
-  const stream = new Readable();
-  stream.push(imageBuffer);
-  stream.push(null);
-  const res = await drive.files.create({
-    requestBody: { name: fileName, parents: [DRIVE_FOLDER_ID], mimeType: 'image/png' },
-    media: { mimeType: 'image/png', body: stream },
-    fields: 'id,webViewLink',
-  });
-  return res.data;
+  
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Drive upload failed: ${res.status} - ${err}`);
+  }
+  return await res.json();
 }
 
 exports.handler = async (event) => {
