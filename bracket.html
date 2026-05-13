@@ -4,6 +4,28 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>UProStats — Simulador Mundial 2026</title>
+
+<!-- Favicon -->
+<link rel="icon" type="image/png" sizes="32x32" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+<!-- Open Graph -->
+<meta property="og:type"        content="website">
+<meta property="og:site_name"   content="UProStats">
+<meta property="og:title"       content="UProStats — Simulador Mundial 2026">
+<meta property="og:description" content="Simula el Mundial FIFA 2026 partido a partido y crea tu propio bracket con UProStats.">
+<meta property="og:image"       content="og-image.png">
+<meta property="og:image:alt"   content="Logo UProStats">
+<meta property="og:url"         content="https://mundial.uprostats.com/bracket.html">
+<meta property="og:locale"      content="es_PR">
+
+<!-- Twitter Card -->
+<meta name="twitter:card"        content="summary">
+<meta name="twitter:site"        content="@uprostats">
+<meta name="twitter:title"       content="UProStats — Simulador Mundial 2026">
+<meta name="twitter:description" content="Simula el Mundial FIFA 2026 partido a partido y crea tu propio bracket con UProStats.">
+<meta name="twitter:image"       content="og-image.png">
+
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 
@@ -1057,6 +1079,50 @@ function printPDF(userName){
     return'<div class="rsec"><div class="rtitle">'+title+'</div><div class="rgrid">'
       +ms.map(m=>'<div class="bm"><span class="'+(m.w===m.t1?'bw':'bl')+'">'+(m.t1?flag(m.t1)+' '+m.t1:'TBD')+'</span><span class="bsep">vs</span><span class="'+(m.w===m.t2?'bw':'bl')+'">'+(m.t2?flag(m.t2)+' '+m.t2:'TBD')+'</span></div>').join('')+'</div></div>';
   }
+
+  // Build group match results + standings for matches mode
+  function buildGroupResultsHTML(){
+    if(simMode!=='matches')return'';
+    let html='<div class="gsec"><div class="gstitle">Resultados y Tablas — Fase de Grupos</div>';
+    Object.entries(GS).forEach(([g,teams])=>{
+      const scoresG=SCORES[g]||{};
+      const pairs=GFO[g]||[];
+      const st=STANDINGS[g]||teams.map(t=>({team:t,pts:0,gf:0,ga:0,gd:0,pj:0,w:0,d:0,l:0}));
+      // match results
+      const matchRows=pairs.map(([i1,i2])=>{
+        const key=i1+'-'+i2;const sc=scoresG[key];
+        if(!sc||sc[0]===''||sc[1]==='')return'';
+        const t1=teams[i1],t2=teams[i2];
+        const s1=parseInt(sc[0]),s2=parseInt(sc[1]);
+        const w1=s1>s2,w2=s2>s1;
+        return'<div class="gm-pdf">'
+          +'<span class="'+(w1?'gmt-w':w2?'gmt-l':'gmt-d')+'">'+flag(t1)+' '+t1+'</span>'
+          +'<span class="gm-sc">'+(isNaN(s1)?'-':s1)+' – '+(isNaN(s2)?'-':s2)+'</span>'
+          +'<span class="'+(w2?'gmt-w':w1?'gmt-l':'gmt-d')+'">'+t2+' '+flag(t2)+'</span>'
+          +'</div>';
+      }).join('');
+      // standings table
+      const stRows=st.map((row,i)=>'<tr>'
+        +'<td class="stp '+(i<2?'stq':'')+'">'+( i+1)+'</td>'
+        +'<td>'+flag(row.team)+' '+row.team+'</td>'
+        +'<td class="stn">'+(row.pj||0)+'</td>'
+        +'<td class="stn">'+(row.w||0)+'</td>'
+        +'<td class="stn">'+(row.d||0)+'</td>'
+        +'<td class="stn">'+(row.l||0)+'</td>'
+        +'<td class="stn">'+(row.gd>=0?'+':'')+(row.gd||0)+'</td>'
+        +'<td class="stn stp-pts">'+(row.pts||0)+'</td>'
+        +'</tr>').join('');
+      html+='<div class="gblock">'
+        +'<div class="gbhead">Grupo '+g+'</div>'
+        +'<div class="gbleft">'+matchRows+'</div>'
+        +'<table class="sttable"><thead><tr><th>№</th><th>Equipo</th><th>PJ</th><th>G</th><th>E</th><th>P</th><th>DG</th><th>Pts</th></tr></thead>'
+        +'<tbody>'+stRows+'</tbody></table>'
+        +'</div>';
+    });
+    html+='</div>';
+    return html;
+  }
+
   const css='@import url(\'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap\');'
     +'*{box-sizing:border-box;margin:0;padding:0}body{font-family:\'DM Sans\',Arial,sans-serif;background:#fff;color:#1a2535;font-size:11px}'
     +'.page{max-width:740px;margin:0 auto}.hdr{background:#001F3F;color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between}'
@@ -1074,6 +1140,22 @@ function printPDF(userName){
     +'.bm{background:#f8fafc;border:1px solid #e2e8f0;border-radius:5px;padding:4px 8px;display:flex;align-items:center;gap:4px;font-size:10px}'
     +'.bsep{color:#9aacbe;font-size:9px;flex-shrink:0}.bw{font-weight:700;color:#001F3F}.bl{color:#9aacbe;text-decoration:line-through}'
     +'.footer{text-align:center;padding:8px;font-size:9px;color:#9aacbe;background:#f4f7fb}'
+    // Group results styles
+    +'.gsec{padding:8px 20px 2px;border-bottom:1px solid #edf0f5}'
+    +'.gstitle{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:#FF5733;font-weight:700;margin-bottom:8px}'
+    +'.gblock{margin-bottom:10px;border:1px solid #e2e8f0;border-radius:6px;overflow:hidden}'
+    +'.gbhead{background:#001F3F;color:#fff;font-size:10px;font-weight:700;padding:4px 10px;letter-spacing:.04em}'
+    +'.gbleft{padding:4px 8px;background:#f8fafc;border-bottom:1px solid #e2e8f0}'
+    +'.gm-pdf{display:flex;align-items:center;justify-content:space-between;padding:2px 2px;font-size:10px}'
+    +'.gmt-w{font-weight:700;color:#001F3F;flex:1}.gmt-l{color:#9aacbe;flex:1;text-decoration:line-through}.gmt-d{color:#5a6a7e;flex:1}'
+    +'.gm-pdf span:last-child{text-align:right}'
+    +'.gm-sc{font-weight:700;color:#FF5733;font-size:11px;padding:0 8px;white-space:nowrap}'
+    +'.sttable{font-size:10px;width:100%}'
+    +'.sttable th{background:#f0f4f8;color:#5a6a7e;font-size:9px;text-transform:uppercase;letter-spacing:.05em;padding:3px 6px;text-align:center}'
+    +'.sttable th:nth-child(2){text-align:left}'
+    +'.sttable td:nth-child(2){text-align:left}'
+    +'.stn{text-align:center;color:#5a6a7e}.stp{text-align:center;font-weight:700;color:#9aacbe}'
+    +'.stq{color:#16a34a}.stp-pts{font-weight:700;color:#FF5733}'
     +'@media print{body{background:#fff}@page{margin:.6cm;size:A4}}';
   const win='<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Simulación Mundial 2026 - '+userName+'</title>'
     +'<style>'+css+'</style></head><body><div class="page">'
@@ -1084,6 +1166,7 @@ function printPDF(userName){
     +'<div class="pod-item b"><span class="pod-medal">🥉</span><span class="pod-flag">'+(third?flag(third):'🏳️')+'</span><span class="pod-name">'+(third||'Por definir')+'</span></div>'
     +'</div>'
     +'<div class="sec"><div class="stitle">Clasificados por Grupo</div><table><tbody>'+gRows.join('')+'</tbody></table></div>'
+    +buildGroupResultsHTML()
     +cr(BK.r32,'Ronda de 32')+cr(BK.r16,'Octavos de Final')+cr(BK.qf,'Cuartos de Final')+cr(BK.sf,'Semifinales')
     +'<div class="footer">mundial.uprostats.com · '+new Date().toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'})+'</div>'
     +'</div></body></html>';
@@ -1099,4 +1182,3 @@ init();
 </script>
 </body>
 </html>
-
