@@ -213,10 +213,10 @@ nav{background:var(--navy);height:60px;display:flex;align-items:center;
 .pod-bronze .pod-name{color:#9a3412}
 
 /* ACTIONS BAR */
-.actions-bar{background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);
+.actions-bar{background:rgba(255,255,255,0.98);backdrop-filter:blur(12px);
   border-top:1px solid var(--border);padding:14px 24px;
   display:flex;align-items:center;gap:10px;flex-wrap:wrap;
-  position:sticky;bottom:0;z-index:50;box-shadow:0 -2px 12px rgba(0,31,63,0.08)}
+  position:sticky;bottom:0;z-index:100;box-shadow:0 -4px 16px rgba(0,31,63,0.12)}
 .abtn{display:flex;align-items:center;gap:7px;padding:10px 18px;border-radius:8px;
   font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;border:none}
 .abtn-reset{background:var(--surf2);color:var(--muted);border:1.5px solid var(--border2)}
@@ -315,6 +315,9 @@ nav{background:var(--navy);height:60px;display:flex;align-items:center;
   @page{margin:.5cm;size:landscape}
 }
 
+/* FIX5: hide notification dot */
+.nav-logo::after,.hamburger::after{display:none!important}
+
 </style>
 </head>
 <body>
@@ -325,14 +328,14 @@ nav{background:var(--navy);height:60px;display:flex;align-items:center;
     <a class="nav-link" href="index.html">Inicio</a>
     <a class="nav-link" href="calendario.html">Calendario</a>
     <a class="nav-link nav-on" href="bracket.html">Simulador</a>
-    <a class="nav-link" href="https://www.youtube.com" target="_blank">Ver Podcast</a>
+    <a class="nav-link" href="https://www.youtube.com" target="_blank">Podcast: Acceso al Mundial</a>
   </div>
   <button class="hamburger" onclick="toggleNav()" id="ham"><span></span><span></span><span></span></button>
   <div class="mob-menu" id="mobMenu">
     <a href="index.html">Inicio</a>
     <a href="calendario.html">Calendario</a>
     <a class="mob-on" href="bracket.html">Simulador</a>
-    <a href="https://www.youtube.com" target="_blank">Ver Podcast</a>
+    <a href="https://www.youtube.com" target="_blank">Podcast: Acceso al Mundial</a>
   </div>
 </nav>
 
@@ -341,8 +344,8 @@ nav{background:var(--navy);height:60px;display:flex;align-items:center;
   <h1>Simulador <span>Mundial</span></h1>
   <p class="hero-sub">Predice los clasificados, arma tu bracket y descarga tu simulación</p>
   <div class="mode-bar">
-    <button class="mode-btn active" id="modeRanking" onclick="setMode('ranking')">📊 Por Ranking</button>
-    <button class="mode-btn" id="modeMatches" onclick="setMode('matches')">⚽ Por Partidos</button>
+    <button class="mode-btn active" id="modeRanking" onclick="setMode('ranking')">⚽ Básico</button>
+    <button class="mode-btn" id="modeMatches" onclick="setMode('matches')">📊 Avanzado</button>
   </div>
 </div>
 
@@ -362,14 +365,14 @@ nav{background:var(--navy);height:60px;display:flex;align-items:center;
 </div>
 
 <div id="tab-groups"><div class="pw">
-  <div class="ph-title" id="groupsTitle">Fase de Grupos — Por Ranking</div>
+  <div class="ph-title" id="groupsTitle">Fase de Grupos — Principiante (Por Ranking)</div>
   <div class="ph-sub" id="groupsSub">Selecciona los 2 equipos que clasifican de cada grupo.</div>
   <div class="g-grid" id="ggrid"></div>
 </div></div>
 
 <div id="tab-best3" style="display:none"><div class="pw">
   <div class="ph-title">Mejores Terceros Lugares</div>
-  <div class="ph-sub" id="b3Sub">Selecciona los 8 equipos que avanzan como mejores terceros.</div>
+  <div class="ph-sub">Selecciona los 8 equipos que avanzan como mejores terceros al bracket.</div>
   <div class="b3-section">
     <div class="b3-count" id="b3CountLabel">0 / 8 seleccionados</div>
     <div id="b3AutoMsg" style="display:none;background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:10px 14px;font-size:12px;color:#166534;margin-bottom:14px">Los 8 mejores terceros fueron seleccionados automáticamente según sus puntos. Puedes modificar la selección.</div>
@@ -388,7 +391,7 @@ nav{background:var(--navy);height:60px;display:flex;align-items:center;
 </div></div>
 
 <div class="actions-bar">
-  <button class="abtn abtn-reset" id="resetBtn" onclick="resetAll()" style="display:none">↺ Reiniciar Bracket</button>
+  <button class="abtn abtn-reset" id="resetBtn" onclick="resetAll()" style="display:none">↺ Reiniciar</button>
   <div class="asep"></div>
   <button class="abtn abtn-pdf" id="dlBtn" onclick="openModal()" disabled>Enviar y Descargar</button>
 </div>
@@ -424,9 +427,9 @@ nav{background:var(--navy);height:60px;display:flex;align-items:center;
   <h3>¡Predicción registrada!</h3>
   <div class="md-sub">Elige cómo quieres descargar tu simulación.</div>
   <div class="dl-options">
-    <button class="dl-opt-btn" onclick="choosePDF()">
+    <button class="dl-opt-btn" id="dlOptPDF" onclick="choosePDF()" style="display:none">
       <span class="dl-opt-icon">📄</span>
-      <div><span class="dl-opt-title">Descargar PDF</span><span class="dl-opt-desc">Se abre el diálogo de impresión — elige "Guardar como PDF"</span></div>
+      <div><span class="dl-opt-title">Descargar PDF</span><span class="dl-opt-desc">Todas tus selecciones: grupos, bracket, tabla y podio</span></div>
     </button>
     <button class="dl-opt-btn" onclick="choosePNG()">
       <span class="dl-opt-icon">🖼️</span>
@@ -555,10 +558,10 @@ function setMode(m){
 function setModeUI(m){
   document.getElementById('modeRanking').classList.toggle('active',m==='ranking');
   document.getElementById('modeMatches').classList.toggle('active',m==='matches');
-  document.getElementById('groupsTitle').textContent=m==='ranking'?'Fase de Grupos — Por Ranking':'Fase de Grupos — Por Partidos';
+  document.getElementById('groupsTitle').textContent=m==='ranking'?'Fase de Grupos — Principiante (Por Ranking)':'Fase de Grupos — Avanzado (Por Partidos)';
   document.getElementById('groupsSub').textContent=m==='ranking'
     ?'Selecciona los 2 equipos que clasifican de cada grupo. Al completar los 12 grupos avanzarás automáticamente.'
-    :'Ingresa los marcadores de cada partido. La tabla se calcula automáticamente.';
+    :'Ingresa los marcadores de cada partido. La tabla de posiciones se calcula automáticamente.';
 }
 
 // TABS
@@ -717,7 +720,10 @@ function getBest3Candidates(){
       if(st&&st[2])return{team:st[2].team,pts:st[2].pts,gd:st[2].gd,group:g};return null;
     }).filter(Boolean);
   }
-  return Object.values(GS).flat().filter(t=>!adv.has(t)).map(t=>({team:t,group:''}));
+  // Find which group each team belongs to
+  const teamGroup={};
+  Object.entries(GS).forEach(([g,teams])=>teams.forEach(t=>teamGroup[t]=g));
+  return Object.values(GS).flat().filter(t=>!adv.has(t)).map(t=>({team:t,group:teamGroup[t]||''}));
 }
 
 function renderBest3(){
@@ -732,7 +738,8 @@ function renderBest3(){
     const item=document.createElement('div');item.className='b3-item'+(isSel?' sel':'');
     item.innerHTML='<span style="font-size:16px">'+flag(team)+'</span>'
       +'<span class="b3-name">'+team+'</span>'
-      +(c.pts!==undefined&&simMode==='matches'?'<span class="b3-pos">'+c.pts+'pts</span>':'')
+      +(c.group?'<span class="b3-pos">Grp '+c.group+'</span>':'')
+      +(c.pts!==undefined&&simMode==='matches'?'<span class="b3-pos" style="margin-left:2px">'+c.pts+'pts</span>':'')
       +'<div class="b3-check">✓</div>';
     item.onclick=()=>toggleB3(team);
     grid.appendChild(item);
@@ -975,8 +982,7 @@ async function doDownloadPNG(){
 // MODAL & FORM
 function openModal(){
   if(alreadySubmitted){
-    // Already submitted — show download options directly
-    openDownloadOptions();
+    openDownloadOptionsForMode();
     return;
   }
   document.getElementById('captureModal').classList.add('open');
@@ -1020,14 +1026,23 @@ function submitDownload(){
   submitToSheet(data);
   window._lastUserName=nombre;window._lastEmail=email;
   alreadySubmitted=true;
+  // Update button text
+  const dlBtn=document.getElementById('dlBtn');
+  if(dlBtn)dlBtn.textContent='Descargar';
   closeModal();
-  openDownloadOptions();
+  openDownloadOptionsForMode();
 }
 
 function openDownloadOptions(){document.getElementById('downloadOptionsModal').classList.add('open');}
 function closeDownloadOptions(){document.getElementById('downloadOptionsModal').classList.remove('open');}
 function choosePDF(){closeDownloadOptions();printPDF(window._lastUserName||'Usuario');}
 function choosePNG(){closeDownloadOptions();doDownloadPNG();}
+function openDownloadOptionsForMode(){
+  // Update modal based on mode before showing
+  const pdfBtn=document.getElementById('dlOptPDF');
+  if(pdfBtn)pdfBtn.style.display=simMode==='matches'?'':'none';
+  openDownloadOptions();
+}
 
 function printPDF(userName){
   const fin=BK.fin[0]||{};const champ=fin.w||null;const runup=champ?(fin.t1===champ?fin.t2:fin.t1):null;const third=thirdWinner||null;
@@ -1084,3 +1099,4 @@ init();
 </script>
 </body>
 </html>
+
