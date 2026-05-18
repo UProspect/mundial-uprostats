@@ -120,11 +120,13 @@ nav{background:var(--navy);height:60px;display:flex;align-items:center;
 .t-row:hover{background:var(--surf2)}
 .t-row.adv1{background:var(--green-bg)}.t-row.adv1 .tn{color:var(--green);font-weight:600}
 .t-row.adv2{background:rgba(234,179,8,0.07)}.t-row.adv2 .tn{color:#a16207;font-weight:600}
+.t-row.adv3{background:rgba(180,120,40,0.07)}.t-row.adv3 .tn{color:#b47828;font-weight:600}
 .t-flag{font-size:17px;width:22px;text-align:center}
 .tn{font-size:13px;font-weight:500;flex:1;color:var(--text)}
 .t-badge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;letter-spacing:.04em}
 .badge-1{background:rgba(22,163,74,0.15);color:var(--green)}
 .badge-2{background:rgba(161,98,7,0.12);color:#a16207}
+.badge-3{background:rgba(180,120,40,0.12);color:#b47828}
 .g-hint{font-size:10px;color:var(--dim);padding:5px 13px 8px}
 
 /* MATCHES MODE */
@@ -254,9 +256,12 @@ nav{background:var(--navy);height:60px;display:flex;align-items:center;
   backdrop-filter:blur(5px);opacity:0;pointer-events:none;transition:opacity .22s}
 .mo.open{opacity:1;pointer-events:all}
 .md{background:var(--surf);border:1px solid var(--border2);border-radius:16px;
-  padding:28px;max-width:400px;width:92%;max-height:90vh;overflow-y:auto;
+  padding:28px;max-width:400px;width:92%;
+  max-height:calc(90vh - env(safe-area-inset-bottom,0px));
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
   box-shadow:var(--shadow-lg);transform:translateY(14px);transition:transform .22s}
 .mo.open .md{transform:translateY(0)}
+.md-btns{padding-bottom:max(16px,env(safe-area-inset-bottom,16px))}
 .md-logo{text-align:center;margin-bottom:14px}
 .md-logo img{height:28px}
 .md h3{font-size:16px;font-weight:600;color:var(--navy);text-align:center;margin-bottom:4px}
@@ -279,7 +284,7 @@ nav{background:var(--navy);height:60px;display:flex;align-items:center;
 .ferr{font-size:11px;color:#dc2626;margin-top:3px;display:none}
 .ferr.show{display:block}
 .opt{font-size:10px;color:var(--dim);font-style:italic;margin-left:3px;font-weight:400}
-.md-btns{display:flex;flex-direction:column;gap:7px;margin-top:16px}
+.md-btns{display:flex;flex-direction:column;gap:7px;margin-top:16px;padding-bottom:max(16px,env(safe-area-inset-bottom,16px))}
 .md-sub-btn{background:var(--orange);color:#fff;padding:12px;border-radius:8px;
   font-size:14px;font-weight:600;cursor:pointer;border:none;
   font-family:'DM Sans',sans-serif;transition:all .15s;width:100%}
@@ -318,7 +323,11 @@ nav{background:var(--navy);height:60px;display:flex;align-items:center;
   .pw{padding:14px}.g-grid{grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:8px}
   .bracket-outer{padding:14px 8px}.bracket-canvas{min-width:950px}
   .r-col{min-width:128px}.actions-bar{padding:10px 14px;gap:8px}
-  .abtn{padding:8px 12px;font-size:12px}.md{padding:20px 16px}
+  .abtn{padding:8px 12px;font-size:12px}
+  .mo{align-items:flex-end}
+  .md{padding:20px 16px 24px;width:100%;max-width:100%;border-radius:20px 20px 0 0;
+    max-height:88vh;margin:0}
+  .mo.open .md{transform:translateY(0)}
 }
 
 /* FIX #1 mobile: single column for group cards */
@@ -350,14 +359,14 @@ nav{background:var(--navy);height:60px;display:flex;align-items:center;
     <a class="nav-link" href="index.html">Inicio</a>
     <a class="nav-link" href="calendario.html">Calendario</a>
     <a class="nav-link nav-on" href="bracket.html">Simulador</a>
-    <a class="nav-link" href="https://www.youtube.com" target="_blank">Podcast: Acceso al Mundial</a>
+    <a class="nav-link" href="https://www.youtube.com/@TelemundoPuertoRicoTV/podcasts" target="_blank">Podcast: Acceso al Mundial</a>
   </div>
   <button class="hamburger" onclick="toggleNav()" id="ham"><span></span><span></span><span></span></button>
   <div class="mob-menu" id="mobMenu">
     <a href="index.html">Inicio</a>
     <a href="calendario.html">Calendario</a>
     <a class="mob-on" href="bracket.html">Simulador</a>
-    <a href="https://www.youtube.com" target="_blank">Podcast: Acceso al Mundial</a>
+    <a href="https://www.youtube.com/@TelemundoPuertoRicoTV/podcasts" target="_blank">Podcast: Acceso al Mundial</a>
   </div>
 </nav>
 
@@ -396,9 +405,27 @@ nav{background:var(--navy);height:60px;display:flex;align-items:center;
   <div class="ph-title">Mejores Terceros Lugares</div>
   <div class="ph-sub">Selecciona los 8 equipos que avanzan como mejores terceros al bracket.</div>
   <div class="b3-section">
-    <div class="b3-count" id="b3CountLabel">0 / 8 seleccionados</div>
-    <div id="b3AutoMsg" style="display:none;background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:10px 14px;font-size:12px;color:#166534;margin-bottom:14px">Los 8 mejores terceros fueron seleccionados automáticamente según sus puntos. Puedes modificar la selección.</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px">
+      <div class="b3-count" id="b3CountLabel">0 / 8 seleccionados</div>
+      <button id="b3ConfirmBtn" onclick="confirmBest3()"
+        style="display:none;background:var(--orange);color:#fff;border:none;border-radius:8px;
+               padding:10px 22px;font-size:13px;font-weight:600;cursor:pointer;
+               font-family:'DM Sans',sans-serif">
+        Confirmar y Ver Bracket →
+      </button>
+    </div>
+    <div id="b3AutoMsg" style="display:none;background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:10px 14px;font-size:12px;color:#166534;margin-bottom:14px">
+      ✓ Pre-seleccionados automáticamente por puntos. Puedes cambiar la selección y confirmar cuando estés listo.
+    </div>
     <div class="b3-grid" id="b3grid"></div>
+    <div id="b3ConfirmBtnBottom" style="display:none;margin-top:16px;text-align:center">
+      <button onclick="confirmBest3()"
+        style="background:var(--orange);color:#fff;border:none;border-radius:8px;
+               padding:12px 32px;font-size:14px;font-weight:600;cursor:pointer;
+               font-family:'DM Sans',sans-serif;width:100%">
+        Confirmar y Ver Bracket →
+      </button>
+    </div>
   </div>
 </div></div>
 
@@ -470,31 +497,33 @@ nav{background:var(--navy);height:60px;display:flex;align-items:center;
 
 <script>
 const APPS_URL='https://script.google.com/macros/s/AKfycbyoKdW_oT4o3787vBmEB1Dj_fjHO7rMc3zUBWAuiw6aZag_pi0UICPA8dSxVeXKlXTlkw/exec';
-const FL={"México": "🇲🇽", "Sudáfrica": "🇿🇦", "Corea del Sur": "🇰🇷", "Rep. Checa": "🇨🇿", "Canadá": "🇨🇦", "Bosnia y Herz.": "🇧🇦", "Qatar": "🇶🇦", "Suiza": "🇨🇭", "Brasil": "🇧🇷", "Marruecos": "🇲🇦", "Haití": "🇭🇹", "Escocia": "🏴󠁧󠁢󠁳󠁣󠁴󠁿", "EE.UU.": "🇺🇸", "Paraguay": "🇵🇾", "Australia": "🇦🇺", "Türkiye": "🇹🇷", "Alemania": "🇩🇪", "Curazao": "🇨🇼", "C. de Marfil": "🇨🇮", "Ecuador": "🇪🇨", "Países Bajos": "🇳🇱", "Japón": "🇯🇵", "Suecia": "🇸🇪", "Túnez": "🇹🇳", "Bélgica": "🇧🇪", "Egipto": "🇪🇬", "Irán": "🇮🇷", "Nueva Zelanda": "🇳🇿", "España": "🇪🇸", "Cabo Verde": "🇨🇻", "Arabia Saudita": "🇸🇦", "Uruguay": "🇺🇾", "Francia": "🇫🇷", "Senegal": "🇸🇳", "Iraq": "🇮🇶", "Noruega": "🇳🇴", "Argentina": "🇦🇷", "Argelia": "🇩🇿", "Austria": "🇦🇹", "Jordania": "🇯🇴", "Portugal": "🇵🇹", "RD Congo": "🇨🇩", "Uzbekistán": "🇺🇿", "Colombia": "🇨🇴", "Inglaterra": "🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Croacia": "🇭🇷", "Ghana": "🇬🇭", "Panamá": "🇵🇦"};
-const GS={"A": ["México", "Sudáfrica", "Corea del Sur", "Rep. Checa"], "B": ["Canadá", "Bosnia y Herz.", "Qatar", "Suiza"], "C": ["Brasil", "Marruecos", "Haití", "Escocia"], "D": ["EE.UU.", "Paraguay", "Australia", "Türkiye"], "E": ["Alemania", "Curazao", "C. de Marfil", "Ecuador"], "F": ["Países Bajos", "Japón", "Suecia", "Túnez"], "G": ["Bélgica", "Egipto", "Irán", "Nueva Zelanda"], "H": ["España", "Cabo Verde", "Arabia Saudita", "Uruguay"], "I": ["Francia", "Senegal", "Iraq", "Noruega"], "J": ["Argentina", "Argelia", "Austria", "Jordania"], "K": ["Portugal", "RD Congo", "Uzbekistán", "Colombia"], "L": ["Inglaterra", "Croacia", "Ghana", "Panamá"]};
-const GP={"A": [["México", "Sudáfrica"], ["México", "Corea del Sur"], ["México", "Rep. Checa"], ["Sudáfrica", "Corea del Sur"], ["Sudáfrica", "Rep. Checa"], ["Corea del Sur", "Rep. Checa"]], "B": [["Canadá", "Bosnia y Herz."], ["Canadá", "Qatar"], ["Canadá", "Suiza"], ["Bosnia y Herz.", "Qatar"], ["Bosnia y Herz.", "Suiza"], ["Qatar", "Suiza"]], "C": [["Brasil", "Marruecos"], ["Brasil", "Haití"], ["Brasil", "Escocia"], ["Marruecos", "Haití"], ["Marruecos", "Escocia"], ["Haití", "Escocia"]], "D": [["EE.UU.", "Paraguay"], ["EE.UU.", "Australia"], ["EE.UU.", "Türkiye"], ["Paraguay", "Australia"], ["Paraguay", "Türkiye"], ["Australia", "Türkiye"]], "E": [["Alemania", "Curazao"], ["Alemania", "C. de Marfil"], ["Alemania", "Ecuador"], ["Curazao", "C. de Marfil"], ["Curazao", "Ecuador"], ["C. de Marfil", "Ecuador"]], "F": [["Países Bajos", "Japón"], ["Países Bajos", "Suecia"], ["Países Bajos", "Túnez"], ["Japón", "Suecia"], ["Japón", "Túnez"], ["Suecia", "Túnez"]], "G": [["Bélgica", "Egipto"], ["Bélgica", "Irán"], ["Bélgica", "Nueva Zelanda"], ["Egipto", "Irán"], ["Egipto", "Nueva Zelanda"], ["Irán", "Nueva Zelanda"]], "H": [["España", "Cabo Verde"], ["España", "Arabia Saudita"], ["España", "Uruguay"], ["Cabo Verde", "Arabia Saudita"], ["Cabo Verde", "Uruguay"], ["Arabia Saudita", "Uruguay"]], "I": [["Francia", "Senegal"], ["Francia", "Iraq"], ["Francia", "Noruega"], ["Senegal", "Iraq"], ["Senegal", "Noruega"], ["Iraq", "Noruega"]], "J": [["Argentina", "Argelia"], ["Argentina", "Austria"], ["Argentina", "Jordania"], ["Argelia", "Austria"], ["Argelia", "Jordania"], ["Austria", "Jordania"]], "K": [["Portugal", "RD Congo"], ["Portugal", "Uzbekistán"], ["Portugal", "Colombia"], ["RD Congo", "Uzbekistán"], ["RD Congo", "Colombia"], ["Uzbekistán", "Colombia"]], "L": [["Inglaterra", "Croacia"], ["Inglaterra", "Ghana"], ["Inglaterra", "Panamá"], ["Croacia", "Ghana"], ["Croacia", "Panamá"], ["Ghana", "Panamá"]]};
+const FL={"México": "🇲🇽", "Sudáfrica": "🇿🇦", "Corea del Sur": "🇰🇷", "Rep. Checa": "🇨🇿", "Canadá": "🇨🇦", "Bosnia y Herz.": "🇧🇦", "Qatar": "🇶🇦", "Suiza": "🇨🇭", "Brasil": "🇧🇷", "Marruecos": "🇲🇦", "Haití": "🇭🇹", "Escocia": "🏴󠁧󠁢󠁳󠁣󠁴󠁿", "EE.UU.": "🇺🇸", "Paraguay": "🇵🇾", "Australia": "🇦🇺", "Turquía": "🇹🇷", "Alemania": "🇩🇪", "Curazao": "🇨🇼", "C. de Marfil": "🇨🇮", "Ecuador": "🇪🇨", "Países Bajos": "🇳🇱", "Japón": "🇯🇵", "Suecia": "🇸🇪", "Túnez": "🇹🇳", "Bélgica": "🇧🇪", "Egipto": "🇪🇬", "Irán": "🇮🇷", "Nueva Zelanda": "🇳🇿", "España": "🇪🇸", "Cabo Verde": "🇨🇻", "Arabia Saudita": "🇸🇦", "Uruguay": "🇺🇾", "Francia": "🇫🇷", "Senegal": "🇸🇳", "Iraq": "🇮🇶", "Noruega": "🇳🇴", "Argentina": "🇦🇷", "Argelia": "🇩🇿", "Austria": "🇦🇹", "Jordania": "🇯🇴", "Portugal": "🇵🇹", "RD Congo": "🇨🇩", "Uzbekistán": "🇺🇿", "Colombia": "🇨🇴", "Inglaterra": "🏴󠁧󠁢󠁥󠁮󠁧󠁿", "Croacia": "🇭🇷", "Ghana": "🇬🇭", "Panamá": "🇵🇦"};
+const GS={"A": ["México", "Sudáfrica", "Corea del Sur", "Rep. Checa"], "B": ["Canadá", "Bosnia y Herz.", "Qatar", "Suiza"], "C": ["Brasil", "Marruecos", "Haití", "Escocia"], "D": ["EE.UU.", "Paraguay", "Australia", "Turquía"], "E": ["Alemania", "Curazao", "C. de Marfil", "Ecuador"], "F": ["Países Bajos", "Japón", "Suecia", "Túnez"], "G": ["Bélgica", "Egipto", "Irán", "Nueva Zelanda"], "H": ["España", "Cabo Verde", "Arabia Saudita", "Uruguay"], "I": ["Francia", "Senegal", "Iraq", "Noruega"], "J": ["Argentina", "Argelia", "Austria", "Jordania"], "K": ["Portugal", "RD Congo", "Uzbekistán", "Colombia"], "L": ["Inglaterra", "Croacia", "Ghana", "Panamá"]};
+const GP={"A": [["México", "Sudáfrica"], ["México", "Corea del Sur"], ["México", "Rep. Checa"], ["Sudáfrica", "Corea del Sur"], ["Sudáfrica", "Rep. Checa"], ["Corea del Sur", "Rep. Checa"]], "B": [["Canadá", "Bosnia y Herz."], ["Canadá", "Qatar"], ["Canadá", "Suiza"], ["Bosnia y Herz.", "Qatar"], ["Bosnia y Herz.", "Suiza"], ["Qatar", "Suiza"]], "C": [["Brasil", "Marruecos"], ["Brasil", "Haití"], ["Brasil", "Escocia"], ["Marruecos", "Haití"], ["Marruecos", "Escocia"], ["Haití", "Escocia"]], "D": [["EE.UU.", "Paraguay"], ["EE.UU.", "Australia"], ["EE.UU.", "Turquía"], ["Paraguay", "Australia"], ["Paraguay", "Turquía"], ["Australia", "Turquía"]], "E": [["Alemania", "Curazao"], ["Alemania", "C. de Marfil"], ["Alemania", "Ecuador"], ["Curazao", "C. de Marfil"], ["Curazao", "Ecuador"], ["C. de Marfil", "Ecuador"]], "F": [["Países Bajos", "Japón"], ["Países Bajos", "Suecia"], ["Países Bajos", "Túnez"], ["Japón", "Suecia"], ["Japón", "Túnez"], ["Suecia", "Túnez"]], "G": [["Bélgica", "Egipto"], ["Bélgica", "Irán"], ["Bélgica", "Nueva Zelanda"], ["Egipto", "Irán"], ["Egipto", "Nueva Zelanda"], ["Irán", "Nueva Zelanda"]], "H": [["España", "Cabo Verde"], ["España", "Arabia Saudita"], ["España", "Uruguay"], ["Cabo Verde", "Arabia Saudita"], ["Cabo Verde", "Uruguay"], ["Arabia Saudita", "Uruguay"]], "I": [["Francia", "Senegal"], ["Francia", "Iraq"], ["Francia", "Noruega"], ["Senegal", "Iraq"], ["Senegal", "Noruega"], ["Iraq", "Noruega"]], "J": [["Argentina", "Argelia"], ["Argentina", "Austria"], ["Argentina", "Jordania"], ["Argelia", "Austria"], ["Argelia", "Jordania"], ["Austria", "Jordania"]], "K": [["Portugal", "RD Congo"], ["Portugal", "Uzbekistán"], ["Portugal", "Colombia"], ["RD Congo", "Uzbekistán"], ["RD Congo", "Colombia"], ["Uzbekistán", "Colombia"]], "L": [["Inglaterra", "Croacia"], ["Inglaterra", "Ghana"], ["Inglaterra", "Panamá"], ["Croacia", "Ghana"], ["Croacia", "Panamá"], ["Ghana", "Panamá"]]};
 const R32_STRUCT=null;
 
-// ── CORRECT R32 STRUCTURE: exactly 8 best3 slots, no duplicate teams ──
+// ── R32 STRUCTURE — FIFA World Cup 2026 official bracket order ──
+// LEFT = slots 0-7 (top to bottom), RIGHT = slots 8-15 (top to bottom)
+// b:null = slot filled by one of the 8 best third-place teams
 const R32 = [
-  // LEFT SIDE (0-7): 4 best3 slots
-  {side:'L',a:['A',0],b:['B',1]},    // 0: 1A vs 2B
-  {side:'L',a:['C',0],b:['D',1]},    // 1: 1C vs 2D
-  {side:'L',a:['E',0],b:null},         // 2: 1E vs B3 [1]
-  {side:'L',a:['F',0],b:['E',1]},    // 3: 1F vs 2E
-  {side:'L',a:['A',1],b:['B',0]},    // 4: 2A vs 1B
-  {side:'L',a:['C',1],b:null},         // 5: 2C vs B3 [2]
-  {side:'L',a:['D',0],b:null},         // 6: 1D vs B3 [3]
-  {side:'L',a:['F',1],b:null},         // 7: 2F vs B3 [4]
-  // RIGHT SIDE (8-15): 4 best3 slots
-  {side:'R',a:['G',0],b:['H',1]},    // 8:  1G vs 2H
-  {side:'R',a:['I',0],b:['J',1]},    // 9:  1I vs 2J
-  {side:'R',a:['K',0],b:null},         // 10: 1K vs B3 [5]
-  {side:'R',a:['G',1],b:['H',0]},    // 11: 2G vs 1H
-  {side:'R',a:['I',1],b:null},         // 12: 2I vs B3 [6]
-  {side:'R',a:['K',1],b:null},         // 13: 2K vs B3 [7]
-  {side:'R',a:['L',0],b:['J',0]},    // 14: 1L vs 1J
-  {side:'R',a:['L',1],b:null},         // 15: 2L vs B3 [8]
+  // LEFT SIDE (0-7) — top to bottom as shown in bracket
+  {side:'L',a:['E',0],b:null},         // 0: 1E  vs B3[ABCDF]
+  {side:'L',a:['I',0],b:null},         // 1: 1I  vs B3[CDFGH]
+  {side:'L',a:['A',1],b:['B',1]},    // 2: 2A  vs 2B
+  {side:'L',a:['F',0],b:['C',1]},    // 3: 1F  vs 2C
+  {side:'L',a:['K',1],b:['L',1]},    // 4: 2K  vs 2L
+  {side:'L',a:['H',0],b:['J',1]},    // 5: 1H  vs 2J
+  {side:'L',a:['D',0],b:null},         // 6: 1D  vs B3[BEFIJ]
+  {side:'L',a:['G',0],b:null},         // 7: 1G  vs B3[AEHIJ]
+  // RIGHT SIDE (8-15) — top to bottom as shown in bracket
+  {side:'R',a:['C',0],b:['F',1]},    // 8:  1C  vs 2F
+  {side:'R',a:['E',1],b:['I',1]},    // 9:  2E  vs 2I
+  {side:'R',a:['A',0],b:null},         // 10: 1A  vs B3[CEFHI]
+  {side:'R',a:['L',0],b:null},         // 11: 1L  vs B3[EHIJK]
+  {side:'R',a:['J',0],b:['H',1]},    // 12: 1J  vs 2H
+  {side:'R',a:['D',1],b:['G',1]},    // 13: 2D  vs 2G
+  {side:'R',a:['B',0],b:null},         // 14: 1B  vs B3[EFGIJ]
+  {side:'R',a:['K',0],b:null},         // 15: 1K  vs B3[DEIJL]
 ];
 
 // Group fixture order (6 matches per group, index pairs into GS[g])
@@ -582,7 +611,7 @@ function setModeUI(m){
   document.getElementById('modeMatches').classList.toggle('active',m==='matches');
   document.getElementById('groupsTitle').textContent=m==='ranking'?'Fase de Grupos — Principiante (Por Ranking)':'Fase de Grupos — Avanzado (Por Partidos)';
   document.getElementById('groupsSub').textContent=m==='ranking'
-    ?'Selecciona los 2 equipos que clasifican de cada grupo. Al completar los 12 grupos avanzarás automáticamente.'
+    ?'Selecciona 1ro, 2do y 3ro de cada grupo. Al completar los 12 grupos podrás elegir los 8 mejores terceros.'
     :'Ingresa los marcadores de cada partido. La tabla de posiciones se calcula automáticamente.';
 }
 
@@ -613,22 +642,22 @@ function transition(tab,msg,sub,icon){
 function renderGroups(){
   const grid=document.getElementById('ggrid');grid.innerHTML='';
   Object.entries(GS).forEach(([g,teams])=>{
-    const adv=GRP[g]||[];const done=adv.length===2;
+    const adv=GRP[g]||[];const reqDone=simMode==='ranking'?3:2;const done=adv.length>=reqDone;
     const card=document.createElement('div');card.className='g-card'+(done?' done':'');
     card.innerHTML='<div class="g-head"><span class="g-letter">Grupo '+g+'</span>'
-      +'<span class="g-cnt'+(done?' done':'')+'">'+( done?'✓ Completo':adv.length+'/2')+'</span></div>';
+      +'<span class="g-cnt'+(done?' done':'')+'">'+(done?'✓ Completo':adv.length+'/'+(simMode==='ranking'?3:2))+'</span></div>';
     if(simMode==='ranking'){
       teams.forEach(team=>{
         const pos=adv.indexOf(team);
         const r=document.createElement('div');
-        r.className='t-row'+(pos===0?' adv1':pos===1?' adv2':'');
+        r.className='t-row'+(pos===0?' adv1':pos===1?' adv2':pos===2?' adv3':'');
         r.innerHTML='<span class="t-flag">'+flag(team)+'</span><span class="tn">'+team+'</span>'
-          +(pos===0?'<span class="t-badge badge-1">1ro</span>':pos===1?'<span class="t-badge badge-2">2do</span>':'');
+          +(pos===0?'<span class="t-badge badge-1">1ro</span>':pos===1?'<span class="t-badge badge-2">2do</span>':pos===2?'<span class="t-badge badge-3">3ro</span>':'');
         r.onclick=()=>toggleG(g,team);
         card.appendChild(r);
       });
       const hint=document.createElement('div');hint.className='g-hint';
-      hint.textContent='Toca para seleccionar 1ro y 2do';card.appendChild(hint);
+      hint.textContent='Toca para seleccionar 1ro, 2do y 3ro';card.appendChild(hint);
     }else{
       renderMatchMode(card,g,teams);
     }
@@ -638,10 +667,29 @@ function renderGroups(){
 
 function toggleG(g,team){
   let adv=GRP[g]||[];
-  if(adv.includes(team)){adv=adv.filter(t=>t!==team);clearTeam(team);best3=best3.map(t=>t===team?null:t);}
-  else{if(adv.length>=2){showToast('Grupo '+g+': ya hay 2 clasificados');return;}adv=[...adv,team];}
+  if(adv.includes(team)){
+    adv=adv.filter(t=>t!==team);
+    clearTeam(team);
+    // also remove from best3 if it was the 3rd place
+    best3=best3.map(t=>t===team?null:t);
+  } else {
+    if(adv.length>=3){showToast('Grupo '+g+': ya hay 3 clasificados');return;}
+    adv=[...adv,team];
+  }
   GRP[g]=adv;renderGroups();updateProg();autosave();
-  if(groupsDone()){if(simMode==='matches')autoSelectBest3();setTimeout(()=>transition('best3','Grupos completados','Selecciona los mejores terceros...','✓'),400);}
+  if(groupsDone()){
+    if(simMode==='matches')autoSelectBest3();
+    // populate best3 from ranking mode (the 3rd of each group)
+    if(simMode==='ranking') populateBest3FromRanking();
+    setTimeout(()=>transition('best3','Grupos completados','Selecciona los mejores terceros...','✓'),400);
+  }
+}
+
+// Ranking mode: extract 3rd-place teams from GRP into best3 candidates
+function populateBest3FromRanking(){
+  // best3 is selection of 8 from the 12 thirds; reset it so user can pick
+  best3=[];
+  autosave();
 }
 
 // FIX #1: matches mode — fixture order, show classified after 5+ games
@@ -678,8 +726,8 @@ function getPlayedCount(g){return Object.values(SCORES[g]||{}).filter(s=>s[0]!==
 function allMatchesGroupsDone(){return Object.keys(GS).every(g=>getPlayedCount(g)===6);}
 function autoAdvanceFromMatches(){
   if(!groupsDone())return;
-  autoSelectBest3();
-  setTimeout(()=>transition('best3','Grupos completados','Calculando mejores terceros...','✓'),400);
+  autoSelectBest3(); // pre-selects 8 best thirds, user still must confirm
+  setTimeout(()=>transition('best3','Grupos completados','Revisa y confirma los mejores terceros...','✓'),400);
 }
 
 function computeStandings(g){
@@ -699,8 +747,13 @@ function computeStandings(g){
   st.sort((a,b)=>b.pts-a.pts||b.gd-a.gd||b.gf-a.gf);
   STANDINGS[g]=st;
   const played=Object.values(scoresG).filter(s=>s[0]!==''&&s[1]!=='').length;
-  if(played>=5){GRP[g]=[st[0].team,...(st[1].pj>0?[st[1].team]:[])];}
-  else{GRP[g]=[];}
+  if(played>=5){
+    const top=[];
+    if(st[0].pj>0)top.push(st[0].team);
+    if(st[1]&&st[1].pj>0)top.push(st[1].team);
+    if(st[2]&&st[2].pj>0)top.push(st[2].team);
+    GRP[g]=top;
+  } else{GRP[g]=[];}
 }
 
 function buildStandingsTable(g){
@@ -711,7 +764,7 @@ function buildStandingsTable(g){
   wrap.innerHTML='<div class="st-head"><span>#</span><span></span><span>Equipo</span>'
     +'<span>PJ</span><span>G</span><span>E</span><span>P</span><span>DG</span><span>Pts</span></div>'
     +st.map((row,i)=>'<div class="st-row">'
-      +'<span class="st-pos '+(played>=5&&i<2?'q'+(i+1):'')+'">'+icons[i]+'</span>'
+      +'<span class="st-pos '+(played>=5&&i<3?'q'+(i+1):'')+'">'+icons[i]+'</span>'
       +'<span class="st-flag">'+flag(row.team)+'</span>'
       +'<span class="st-name">'+row.team.split(' ').slice(0,2).join(' ')+'</span>'
       +'<span class="st-num">'+(row.pj||0)+'</span><span class="st-num">'+(row.w||0)+'</span>'
@@ -725,7 +778,6 @@ function buildStandingsTable(g){
 function autoSelectBest3(){
   // Only auto-select for matches mode
   if(simMode!=='matches')return;
-  const adv=new Set(Object.values(GRP).flat());
   let thirds=[];
   Object.entries(STANDINGS).forEach(([g,st])=>{
     if(st&&st[2])thirds.push({team:st[2].team,pts:st[2].pts,gd:st[2].gd,gf:st[2].gf});
@@ -736,25 +788,33 @@ function autoSelectBest3(){
 }
 
 function getBest3Candidates(){
-  const adv=new Set(Object.values(GRP).flat());
   if(simMode==='matches'){
     return Object.entries(STANDINGS).map(([g,st])=>{
       if(st&&st[2])return{team:st[2].team,pts:st[2].pts,gd:st[2].gd,group:g};return null;
     }).filter(Boolean);
   }
-  // Find which group each team belongs to
-  const teamGroup={};
-  Object.entries(GS).forEach(([g,teams])=>teams.forEach(t=>teamGroup[t]=g));
-  return Object.values(GS).flat().filter(t=>!adv.has(t)).map(t=>({team:t,group:teamGroup[t]||''}));
+  // Ranking mode: the 3rd place of each group is GRP[g][2]
+  const candidates=[];
+  Object.entries(GRP).forEach(([g,adv])=>{
+    if(adv&&adv[2]) candidates.push({team:adv[2],group:g});
+  });
+  return candidates;
 }
 
 function renderBest3(){
   const cands=getBest3Candidates();
   const grid=document.getElementById('b3grid');grid.innerHTML='';
   const selSet=new Set(best3.filter(Boolean));
-  // Show auto-selection message
+  const ready=selSet.size===8;
+  const isMatches=simMode==='matches';
+  // Auto-msg (matches mode pre-selection)
   const msg=document.getElementById('b3AutoMsg');
-  if(msg)msg.style.display=selSet.size===8?'':'none';
+  if(msg)msg.style.display=(isMatches&&ready)?'block':'none';
+  // Confirm buttons: only in matches mode
+  const btn=document.getElementById('b3ConfirmBtn');
+  const btnB=document.getElementById('b3ConfirmBtnBottom');
+  if(btn)btn.style.display=(isMatches&&ready)?'':'none';
+  if(btnB)btnB.style.display=(isMatches&&ready)?'':'none';
   cands.forEach(c=>{
     const team=c.team;const isSel=selSet.has(team);
     const item=document.createElement('div');item.className='b3-item'+(isSel?' sel':'');
@@ -774,7 +834,17 @@ function toggleB3(team){
   if(set.has(team)){set.delete(team);}
   else{if(set.size>=8){showToast('Solo puedes elegir 8 mejores terceros');return;}set.add(team);}
   best3=Array.from(set);renderBest3();updateProg();autosave();
-  if(best3.length===8){syncBest3toR32();setTimeout(()=>transition('bracket','Todo listo','Generando bracket...','🏆'),400);}
+  // ranking mode: auto-advance on 8th selection; matches mode: user clicks Confirmar
+  if(simMode==='ranking'&&best3.filter(Boolean).length===8){
+    syncBest3toR32();
+    setTimeout(()=>transition('bracket','Todo listo','Generando bracket...','🏆'),400);
+  }
+}
+
+function confirmBest3(){
+  if(best3.filter(Boolean).length!==8){showToast('Selecciona exactamente 8 mejores terceros');return;}
+  syncBest3toR32();
+  setTimeout(()=>transition('bracket','Todo listo','Generando bracket...','🏆'),200);
 }
 
 function syncBest3toR32(){
@@ -931,10 +1001,13 @@ function renderPodium(){
 }
 
 // PROGRESS & BUTTONS
-function groupsDone(){return Object.values(GRP).filter(a=>a.length===2).length===12;}
+function groupsDone(){
+  if(simMode==='matches') return Object.values(GRP).filter(a=>a.length>=2).length===12;
+  return Object.values(GRP).filter(a=>a.length===3).length===12;
+}
 function best3Done(){return best3.filter(Boolean).length===8;}
 function updateProg(){
-  let cg=0;Object.values(GRP).forEach(a=>{if(a.length===2)cg++;});
+  const reqLen=simMode==='ranking'?3:2;let cg=0;Object.values(GRP).forEach(a=>{if(a.length>=reqLen)cg++;});
   let dm=0;['r32','r16','qf','sf','fin'].forEach(r=>{(BK[r]||[]).forEach(m=>{if(m.w)dm++;});});
   const b3=best3.filter(Boolean).length;
   document.getElementById('pg-g').textContent=cg;
@@ -1079,50 +1152,6 @@ function printPDF(userName){
     return'<div class="rsec"><div class="rtitle">'+title+'</div><div class="rgrid">'
       +ms.map(m=>'<div class="bm"><span class="'+(m.w===m.t1?'bw':'bl')+'">'+(m.t1?flag(m.t1)+' '+m.t1:'TBD')+'</span><span class="bsep">vs</span><span class="'+(m.w===m.t2?'bw':'bl')+'">'+(m.t2?flag(m.t2)+' '+m.t2:'TBD')+'</span></div>').join('')+'</div></div>';
   }
-
-  // Build group match results + standings for matches mode
-  function buildGroupResultsHTML(){
-    if(simMode!=='matches')return'';
-    let html='<div class="gsec"><div class="gstitle">Resultados y Tablas — Fase de Grupos</div>';
-    Object.entries(GS).forEach(([g,teams])=>{
-      const scoresG=SCORES[g]||{};
-      const pairs=GFO[g]||[];
-      const st=STANDINGS[g]||teams.map(t=>({team:t,pts:0,gf:0,ga:0,gd:0,pj:0,w:0,d:0,l:0}));
-      // match results
-      const matchRows=pairs.map(([i1,i2])=>{
-        const key=i1+'-'+i2;const sc=scoresG[key];
-        if(!sc||sc[0]===''||sc[1]==='')return'';
-        const t1=teams[i1],t2=teams[i2];
-        const s1=parseInt(sc[0]),s2=parseInt(sc[1]);
-        const w1=s1>s2,w2=s2>s1;
-        return'<div class="gm-pdf">'
-          +'<span class="'+(w1?'gmt-w':w2?'gmt-l':'gmt-d')+'">'+flag(t1)+' '+t1+'</span>'
-          +'<span class="gm-sc">'+(isNaN(s1)?'-':s1)+' – '+(isNaN(s2)?'-':s2)+'</span>'
-          +'<span class="'+(w2?'gmt-w':w1?'gmt-l':'gmt-d')+'">'+t2+' '+flag(t2)+'</span>'
-          +'</div>';
-      }).join('');
-      // standings table
-      const stRows=st.map((row,i)=>'<tr>'
-        +'<td class="stp '+(i<2?'stq':'')+'">'+( i+1)+'</td>'
-        +'<td>'+flag(row.team)+' '+row.team+'</td>'
-        +'<td class="stn">'+(row.pj||0)+'</td>'
-        +'<td class="stn">'+(row.w||0)+'</td>'
-        +'<td class="stn">'+(row.d||0)+'</td>'
-        +'<td class="stn">'+(row.l||0)+'</td>'
-        +'<td class="stn">'+(row.gd>=0?'+':'')+(row.gd||0)+'</td>'
-        +'<td class="stn stp-pts">'+(row.pts||0)+'</td>'
-        +'</tr>').join('');
-      html+='<div class="gblock">'
-        +'<div class="gbhead">Grupo '+g+'</div>'
-        +'<div class="gbleft">'+matchRows+'</div>'
-        +'<table class="sttable"><thead><tr><th>№</th><th>Equipo</th><th>PJ</th><th>G</th><th>E</th><th>P</th><th>DG</th><th>Pts</th></tr></thead>'
-        +'<tbody>'+stRows+'</tbody></table>'
-        +'</div>';
-    });
-    html+='</div>';
-    return html;
-  }
-
   const css='@import url(\'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap\');'
     +'*{box-sizing:border-box;margin:0;padding:0}body{font-family:\'DM Sans\',Arial,sans-serif;background:#fff;color:#1a2535;font-size:11px}'
     +'.page{max-width:740px;margin:0 auto}.hdr{background:#001F3F;color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between}'
@@ -1140,22 +1169,6 @@ function printPDF(userName){
     +'.bm{background:#f8fafc;border:1px solid #e2e8f0;border-radius:5px;padding:4px 8px;display:flex;align-items:center;gap:4px;font-size:10px}'
     +'.bsep{color:#9aacbe;font-size:9px;flex-shrink:0}.bw{font-weight:700;color:#001F3F}.bl{color:#9aacbe;text-decoration:line-through}'
     +'.footer{text-align:center;padding:8px;font-size:9px;color:#9aacbe;background:#f4f7fb}'
-    // Group results styles
-    +'.gsec{padding:8px 20px 2px;border-bottom:1px solid #edf0f5}'
-    +'.gstitle{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:#FF5733;font-weight:700;margin-bottom:8px}'
-    +'.gblock{margin-bottom:10px;border:1px solid #e2e8f0;border-radius:6px;overflow:hidden}'
-    +'.gbhead{background:#001F3F;color:#fff;font-size:10px;font-weight:700;padding:4px 10px;letter-spacing:.04em}'
-    +'.gbleft{padding:4px 8px;background:#f8fafc;border-bottom:1px solid #e2e8f0}'
-    +'.gm-pdf{display:flex;align-items:center;justify-content:space-between;padding:2px 2px;font-size:10px}'
-    +'.gmt-w{font-weight:700;color:#001F3F;flex:1}.gmt-l{color:#9aacbe;flex:1;text-decoration:line-through}.gmt-d{color:#5a6a7e;flex:1}'
-    +'.gm-pdf span:last-child{text-align:right}'
-    +'.gm-sc{font-weight:700;color:#FF5733;font-size:11px;padding:0 8px;white-space:nowrap}'
-    +'.sttable{font-size:10px;width:100%}'
-    +'.sttable th{background:#f0f4f8;color:#5a6a7e;font-size:9px;text-transform:uppercase;letter-spacing:.05em;padding:3px 6px;text-align:center}'
-    +'.sttable th:nth-child(2){text-align:left}'
-    +'.sttable td:nth-child(2){text-align:left}'
-    +'.stn{text-align:center;color:#5a6a7e}.stp{text-align:center;font-weight:700;color:#9aacbe}'
-    +'.stq{color:#16a34a}.stp-pts{font-weight:700;color:#FF5733}'
     +'@media print{body{background:#fff}@page{margin:.6cm;size:A4}}';
   const win='<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Simulación Mundial 2026 - '+userName+'</title>'
     +'<style>'+css+'</style></head><body><div class="page">'
@@ -1166,7 +1179,6 @@ function printPDF(userName){
     +'<div class="pod-item b"><span class="pod-medal">🥉</span><span class="pod-flag">'+(third?flag(third):'🏳️')+'</span><span class="pod-name">'+(third||'Por definir')+'</span></div>'
     +'</div>'
     +'<div class="sec"><div class="stitle">Clasificados por Grupo</div><table><tbody>'+gRows.join('')+'</tbody></table></div>'
-    +buildGroupResultsHTML()
     +cr(BK.r32,'Ronda de 32')+cr(BK.r16,'Octavos de Final')+cr(BK.qf,'Cuartos de Final')+cr(BK.sf,'Semifinales')
     +'<div class="footer">mundial.uprostats.com · '+new Date().toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'})+'</div>'
     +'</div></body></html>';
